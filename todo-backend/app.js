@@ -26,7 +26,10 @@ console.log(config.mongoDbHost)
 //To run in docker container set username and passoword for additional security
 //mongodb://${config.monogoDbUsername}:${config.mongoDbPassword}@${config.mongoDbHost}:27017/todo_app?authSource=admin
 
-const mongoDB = 'mongodb://localhost/todo_app';
+//To run locally
+//mongodb://localhost/todo_app
+
+const mongoDB = `mongodb://${config.monogoDbUsername}:${config.mongoDbPassword}@${config.mongoDbHost}:27017/todo_app?authSource=admin`;
 mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
 
 var db = mongoose.connection;

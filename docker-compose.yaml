@@ -1,0 +1,47 @@
+version: '3.8'
+services:
+  mongodb:
+    image: 'mongo'
+    volumes:
+      - data:/data/db
+    restart: always
+    # environment:
+    #   MONGO_INITDB_ROOT_USERNAME: root
+    #   MONGO_INITDB_ROOT_PASSWORD: password
+    env_file:
+      - ./env/mongo.env
+    ports:
+      - '27017:27017'
+    container_name: mongodb # optional
+    # networks:
+      # - todo-network
+  backend:
+    build: ./todo-backend
+    # build:
+    #   context: ./todo-backend
+    #   dockererfile: Dockerfile
+    #   args:
+    #     some-args: 1
+    ports:
+      - '3030:3030' #host:container
+    volumes:
+      - ./todo-backend:/app #bind mount - live source code change for development purpose
+      - /app/node_modules
+    env_file:
+      - ./env/node.env
+    depends_on:
+      - mongodb
+  frontend:
+    build: ./todo-frontend
+    ports:
+      - '3000:3000'
+    volumes:
+      - /app/node_modules
+      - ./todo-frontend:/app
+    stdin_open: true #to run in interactive mode
+    tty: true #to run in interactive mode
+    depends_on:
+      - mongodb
+      - backend
+volumes: #specify all named volumes that are used
+  data:
