@@ -16,10 +16,10 @@ services:
     # networks:
       # - todo-network
   backend:
-    build: ./todo-backend
+    build: ./todo-backend #if dockerfile path is straightforward we can use this
     # build:
     #   context: ./todo-backend
-    #   dockererfile: Dockerfile
+    #   dockererfile: Dockerfile - docker file name inside the path
     #   args:
     #     some-args: 1
     ports:

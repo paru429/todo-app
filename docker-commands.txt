@@ -1,10 +1,10 @@
-docker create network todo-app
+docker network create todo-app
 
 docker run \
     --name mongodb \
     --rm \
     -d \
-    --network todo-network \
+    --network todo-app \
     -v data:/data/db \
     -e MONGO_INITDB_ROOT_USERNAME=root -e MONGO_INITDB_ROOT_PASSWORD=password \
     mongo
@@ -17,21 +17,35 @@ docker run \
     --name todo-react \
     --rm \
     -p 3000:3000 \
-    -v /Users/xyz/Documents/POC/node/todo-app/todo-frontend/src:/app/src \
+    -v /Users/xyz/Documents/dockerExamples/todo-app/todo-frontend/src:/app/src \
     -v /app/node_modules \
     todo-react
 
 //inside todo-backend
-docker build -t todo-node .
+docker build -t todo-react .
 
 docker run \
     --name todo-node \
     -p 3030:3030 \
     --rm \
-    --network todo-network \
+    --network todo-app \
     -e MONGO_HOST=mongodb \
-    -v /Users/xyz/Documents/POC/node/todo-app/todo-backend:/app \
+    -v /Users/xyz/Documents/dockerExamples/todo-app/todo-backend:/app \
     -v /app/modules \
     todo-node
 
 docker stop mongodb todo-react todo-node
+
+
+//Commands
+docker network create todo-app
+
+docker build -t todo-react .
+
+docker build -t todo-react .
+
+docker run --name todo-react --rm -p 3000:3000 -v /Users/xyz/Documents/dockerExamples/todo-app/todo-frontend/src:/app/src -v /app/node_modules todo-react
+
+docker run --name todo-node -p 3030:3030 --rm --network todo-app -e MONGO_HOST=mongodb -v /Users/xyz/Documents/dockerExamples/todo-app/todo-backend:/app -v /app/modules todo-node
+
+docker run --name mongodb --rm -d --network todo-app -v data:/data/db -e MONGO_INITDB_ROOT_USERNAME=root -e MONGO_INITDB_ROOT_PASSWORD=password mongo
